@@ -17,7 +17,9 @@ sudo apt-get -y update && sudo apt-get install -y pip3
 Afin que le code s'execute correctement, voici la liste à jour des librairies à installer:
 
 tkinker : ```Bash sudo apt-get install python3-tk```
+
 numpy : ```Bash pip3 install numpy```
+
 matplotlib: ```Bash pip3 install matplotlib```
 
 
