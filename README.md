@@ -14,12 +14,12 @@ Afin d'installer certaines librairies, il est utile d'utiliser le programme **pi
 sudo apt-get -y update && sudo apt-get install -y pip3
 ```
 
-Afin que le code s'execute correctement, voici la liste à jour des librairies à installer:
+Afin que le code s'execute correctement, voici la liste à jour des librairies à installer (les commandes données fonctionnent sous un système **Debian-based**):
 
-tkinker : ```Bash sudo apt-get install python3-tk```
+tkinker : ```sudo apt-get install python3-tk```
 
-numpy : ```Bash pip3 install numpy```
+numpy : ```pip3 install numpy```
 
-matplotlib: ```Bash pip3 install matplotlib```
+matplotlib: ```pip3 install matplotlib```
 
 
