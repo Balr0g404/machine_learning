@@ -7,8 +7,11 @@ import numpy as np
 import pandas as pd
 import sys
 import os
+from sklearn.preprocessing import StandardScaler
+from sklearn.model_selection import train_test_split
 
-os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3' #Sert à cacher les warnings de tensorflow
+
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3' #Sert à cacher les warnings de tensorflow 2.0 alpha
 
 assert hasattr(tf, "function") # Pour être sûr d'utiliser tensorflow 2.0
 
@@ -23,6 +26,13 @@ targets = targets[:10000]
 #On note le type de vêtement associé à chaque classe
 targets_name = ["Tshirt/top","Trouser","Pullover","Dress","Coat","Sandal","Shirt","Sneaker","Bag","Ankle boot"]
 
+images = images.reshape(-1,784)
+images = images.astype(float)
+scaler = StandardScaler()
+images = scaler.fit_transform(images) #Afin de flatten les images
+
+images_train, images_test, targets_train, targets_test = train_test_split(images, targets, test_size=0.2, random_state=1) #Permet de créer un train set et un validation set
+
 #Affiche une image de la dataset
 # plt.imshow(images[20], cmap="binary")
 # plt.title(targets_name[targets[20]])
@@ -30,7 +40,6 @@ targets_name = ["Tshirt/top","Trouser","Pullover","Dress","Coat","Sandal","Shirt
 
 #Création du modèle: 28*28 pixels -> 256 neurones -> 128 neurones -> 10 neurones
 model = tf.keras.models.Sequential()
-model.add(tf.keras.layers.Flatten(input_shape=[28,28])) #Permet de transformer une image 28*28 en un vecteur de 28*28 éléments sur une ligne.
 
 #print("Forme de l'image", images[0:1].shape)
 #model_output = model.predict(images[0:1]) #Execute les opérations définies via le add. Ici cela applatit donc juste l'image
@@ -48,18 +57,18 @@ model.add(tf.keras.layers.Dense(10, activation="softmax"))
 #Compilation du modèle
 model.compile(loss="sparse_categorical_crossentropy",optimizer="sgd",metrics=["accuracy"]) #Définit entre autre la fonction d'erreur à utiliser. sgd = stochastic gradient descent. accuracy est le pourcentage de prédiction correcte.
 
-history = model.fit(images,targets,epochs=20) #entraine le modèle avec nos images, les targets et le nombre d'epochs voulu
+history = model.fit(images_train,targets_train,epochs=50, validation_split=0.2) #entraine le modèle avec nos images, les targets et le nombre d'epochs voulu
 model_output = model.predict(images[0:1])
-print(model_output, targets[0:1])
 
 #On affiche l'évolution de l'erreur et de la précision en fonction du nombre d'epoch
-loss_curve = history.history["loss"]
-acc_curve = history.history["accuracy"]
+loss_curve = history.history["loss"] #Erreur sur les valeurs du jeu d'entrainement
+acc_curve = history.history["accuracy"]#Précision sur les valeurs du jeu d'entrainement
 
-plt.plot(loss_curve)
-plt.title("Loss")
-plt.show()
+loss_val_curve = history.history["val_loss"]#Erreur sur les valeurs du jeu de validation
+acc_val_curve = history.history["val_accuracy"]#Précision sur les valeurs du jeu de validation
 
-plt.plot(acc_curve)
-plt.title("Accuracy")
-plt.show()
+plt.plot(loss_curve, label="Train loss")
+plt.plot(loss_val_curve, label="Validation loss")
+plt.legend(loc="upper right")
+plt.title("Train loss VS validation loss")
+plt.show() #Affichage des courbes

@@ -22,4 +22,8 @@ numpy : ```pip3 install numpy```
 
 matplotlib: ```pip3 install matplotlib```
 
+pandas: ```pip3 install pandas```
 
+sklearn: ```pip3 install sklearn```
+
+tensorflow: ```pip3 install tensorflow==2.0.0-alpha0```
